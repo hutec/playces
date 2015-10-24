@@ -32,7 +32,9 @@
             </div>
         </nav>
 
-             <div id="map"></div>
+            <div class="container">
+                <div id="map"></div>
+            </div>
                 <script>
                     var map;
                     function initMap() {
@@ -40,8 +42,18 @@
                         center: {lat: 49.009148, lng: 8.3799},
                         zoom: 13
                       });
+
+                      map.addListener('click', function(e) {
+                          placeMarker(e.latLng, map);
+                      });
                     }
 
+                    function placeMarker(latLng, map) {
+                        var marker = new google.maps.Marker({
+                            position: latLng,
+                            map: map
+                        });
+                    }
                 </script>
                 <script src="https://maps.googleapis.com/maps/api/js?callback=initMap"
                     async defer></script>
