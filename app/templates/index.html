@@ -32,14 +32,13 @@
             </div>
         </nav>
 
-            <div class=" container-full">
-                    <div id="map"></div>
+            <div class="container-full">
                     <div id="over_map">
                         <h1> Find {{ name }} </h1>
-                            <input type="hidden" name="data" value="" />
                             <button type="submit" class="btn btn-primary"
                                 id="submit" onclick="submitMarker()">Take Guess</button>
-                </div>
+                    </div>
+                    <div id="map"></div>
             </div>
 
                 <script>
@@ -91,6 +90,9 @@
                         $.post("/submit", {
                             lat: marker.position.lat(),
                             lng: marker.position.lng()
+                        }, function() {
+                            $('#over_map').load(location.href + ' #over_map');
+                            //location.reload(true)
                         });
 
                     }

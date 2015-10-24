@@ -8,11 +8,11 @@ import random
 
 google_places = GooglePlaces(app.config['API_KEY'])
 city = "Karlsruhe, Germany"
-keywords = "Shopping"
+keywords = "Restaurants"
 query_results = google_places.nearby_search(
         location=city, 
         keyword=keywords,
-        radius=20000)
+        radius=5000)
 
 def calculate_distance(guessed_location, actual_location):
     # approximate radius of earth in km
@@ -38,3 +38,7 @@ def calculate_distance(guessed_location, actual_location):
 def get_random_location():
     random_place = random.choice(query_results.places)
     return [random_place.name, random_place.geo_location]
+
+def get_all_locations():
+    return [[place.name, place.geo_location] 
+            for place in query_results.places]
