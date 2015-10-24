@@ -4,13 +4,11 @@ import json
 from googleplaces import GooglePlaces, types, lang
 from app import app
 
-google_places = GooglePlaces(api_key)
+google_places = GooglePlaces(app.config['API_KEY'])
 
-query_result = google_places.nearby_search(
-        location='Karlsruhe, Germany', keyword='Doener',
-        radius=20000, types=[types.TYPE_FOOD])
-
-for place in query_result.places:
-    print place.name
-    print place.geo_location
+def get_location(location, keyword):
+    query_result = google_places.nearby_search(
+            location=location, keyword=keyword,
+            radius=20000)
+    return [query_result.places[0].name, query_result.places[0].geo_location]
 
