@@ -3,3 +3,4 @@ config.py
 app/ebay.yaml
 
 *.swp
+*.DS_Store
