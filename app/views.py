@@ -8,6 +8,7 @@ from pprint import pprint
 import urllib
 import jsonpickle
 from app import places
+from app import scores
 from places import Location
 
 @app.route('/')
@@ -24,9 +25,18 @@ def reset():
 
 @app.route('/submit', methods=['POST'])
 def submit():
-    guessed = Location("Guessed location", request.values)
-    print('New entry (' + str(guessed.latitude) + ',' + str(guessed.longitude) + ') was successfully posted')
-    print(places.calculate_distance(jsonpickle.decode(session['locations'])[session['index']], guessed))
+    lat = request.values['lat']
+    lng = request.values['lng']
+    print('New entry (' + str(lat) + ',' + str(lng) + ') was successfully posted')
+    current_place = jsonpickle.decode(session['locations'])[session['index']]
+    distance = places.calculate_distance(current_place,
+                                        Location("", "", {'lat':lat, 'lng':lng}))
+
+    percentile = scores.add_and_get_percentile(current_place.id, distance)
+    result_str = "Under best " + str(percentile) + "%"
+
+    print(result_str)
+
     session['index'] = session['index'] + 1
     session.modified = True
     print(session['index'])
@@ -35,6 +45,3 @@ def submit():
 @app.route('/update', methods=['POST'])
 def update():
     return render_template("index.html", name=jsonpickle.decode(session['locations'])[session['index']].name)
-
-
-

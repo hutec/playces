@@ -59,15 +59,16 @@ def calculate_distance(guessed_location, actual_location):
 
 def get_random_location():
     random_place = random.choice(sorted_results)
-    place = Location(random_place.name, random_place.geo_location)
+    place = Location(random_place.name, random_place.id, random_place.geo_location)
     return place
 
 def get_all_locations():
-    return [Location(place.name, place.geo_location)
+    return [Location(place.name, place.id, place.geo_location)
             for place in sorted_results]
 
 class Location:
-    def __init__(self, name, geo_location):
+    def __init__(self, name, id_str, geo_location):
         self.name = name
         self.longitude = float(geo_location['lng'])
         self.latitude = float(geo_location['lat'])
+        self.id = id_str

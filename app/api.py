@@ -8,7 +8,7 @@ class MarkerSubmit(Resource):
     def put(self):
         print("Got called")
         latLng = {'lat': request.form['lat'], 'lng': request.form['lng']}
-        guessed = Location("Guessed location", latLng)
+        guessed = Location("Guessed location", None, latLng)
         distance = places.calculate_distance(jsonpickle.decode(session['locations'])[session['index']], guessed)
         goal = jsonpickle.decode(session['locations'])[session['index']]
         session['index'] = session['index'] + 1
