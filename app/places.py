@@ -11,4 +11,3 @@ def get_location(location, keyword):
             location=location, keyword=keyword,
             radius=20000)
     return [query_result.places[0].name, query_result.places[0].geo_location]
-
