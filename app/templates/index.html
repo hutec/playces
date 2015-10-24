@@ -33,103 +33,103 @@
             </div>
         </nav>
 
-            <div class=" container-full">
-                    <div id="map"></div>
-                    <div id="over_map" class="card">
-                        {% if places %}
-                        <h3>{{ places }}</h3>
-                        <input type="hidden" name="data" value="" />
-                        {{ result }}
-                        <button type="submit" class="btn btn-primary"
-                                id="submit" onclick="submitMarker()">Take Guess</button>
-                        <button type="submit" class="btn btn-primary"
-                                              id="next"
-                                onclick="nextGuess()">Next Guest</button>
-                         {% endif %}
-                       </div>
-                    <div id="map"></div>
-            </div>
+        <div class=" container-full">
+            <div id="map"></div>
+            <div id="over_map" class="card">
+                {% if places %}
+                    <h3>{{ places }}</h3>
+                    <input type="hidden" name="data" value="" />
+                    {{ result }}
+                    <button type="submit" class="btn btn-primary"
+                            id="submit" onclick="submitMarker()">Take Guess</button>
+                    <button type="submit" class="btn btn-primary"
+                                          id="next"
+                            onclick="nextGuess()">Next Guest</button>
+                 {% endif %}
+               </div>
+            <div id="map"></div>
+        </div>
 
-                <script>
-                    var map;
-                    var marker;
-                    var goalMarker;
-                    function initMap() {
-                      map = new google.maps.Map(document.getElementById('map'), {
-                        center: {lat: 49.009148, lng: 8.3799},
-                        zoom: 13,
-                        disableDefaultUI: true
-                      });
+        <script>
+            var map;
+            var marker;
+            var goalMarker;
+            function initMap() {
+              map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: 49.009148, lng: 8.3799},
+                zoom: 13,
+                disableDefaultUI: true
+              });
 
-                      var customMapType = new google.maps.StyledMapType([
-                              {
-                                  featureType: "all",
-                                  elementType: "labels",
-                                  stylers: [
-                                  { visibility: "off" }
-                                  ]
-                              }
-                      ]);
-                      var customMapTypeId = 'custom_style';
+              var customMapType = new google.maps.StyledMapType([
+                      {
+                          featureType: "all",
+                          elementType: "labels",
+                          stylers: [
+                          { visibility: "off" }
+                          ]
+                      }
+              ]);
+              var customMapTypeId = 'custom_style';
 
-                      map.mapTypes.set(customMapTypeId, customMapType);
-                      map.setMapTypeId(customMapTypeId);
+              map.mapTypes.set(customMapTypeId, customMapType);
+              map.setMapTypeId(customMapTypeId);
 
-                      map.addListener('click', function(e) {
-                          placeMarker(e.latLng, map);
-                      });
-                    }
+              map.addListener('click', function(e) {
+                  placeMarker(e.latLng, map);
+              });
+            }
 
-                    function placeMarker(latLng, map) {
-                        if (marker && marker.getMap() != null) {
-                            marker.setPosition(latLng);
-                        } else {
-                            marker = new google.maps.Marker({
-                                position: latLng,
-                                map: map
-                            });
-                        }
+            function placeMarker(latLng, map) {
+                if (marker && marker.getMap() != null) {
+                    marker.setPosition(latLng);
+                } else {
+                    marker = new google.maps.Marker({
+                        position: latLng,
+                        map: map
+                    });
+                }
 
-                        var formInfo = document.forms['data'];
+                var formInfo = document.forms['data'];
 
-                        formInfo.elements["data"].value = marker.position;
+                formInfo.elements["data"].value = marker.position;
 
-                    }
+            }
 
-                    function submitMarker() {
-                        $.ajax({
-                            type: 'PUT',
-                            url: '/verify',
-                            data: {
-                                lat: marker.position.lat(),
-                                lng: marker.position.lng()
-                            },
-                            success: function(data) {
-                                var goalLatLng = {lat: data['lat'], lng: data['lng']};
-                                goalMarker = new google.maps.Marker({
-                                    position: goalLatLng,
-                                    map: map
-                                });
-                                goalMarker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
-                            }
+            function submitMarker() {
+                $.ajax({
+                    type: 'PUT',
+                    url: '/verify',
+                    data: {
+                        lat: marker.position.lat(),
+                        lng: marker.position.lng()
+                    },
+                    success: function(data) {
+                        var goalLatLng = {lat: data['lat'], lng: data['lng']};
+                        goalMarker = new google.maps.Marker({
+                            position: goalLatLng,
+                            map: map
                         });
-
-                        $("#submit").hide();
-                        $("#next").css("display", "inline");
+                        goalMarker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
                     }
+                });
 
-                    function nextGuess() {
-                        $("#submit").show();
-                        $("#next").hide();
-                        goalMarker.setMap(null);
-                        marker.setMap(null);
-                        $.post("/update", function() {
-                            $('#over_map').load(location.href + ' #over_map');
-                        });
-                    }
-                </script>
-                <script src="https://maps.googleapis.com/maps/api/js?callback=initMap"
-                    async defer></script>
+                $("#submit").hide();
+                $("#next").css("display", "inline");
+            }
+
+            function nextGuess() {
+                $("#submit").show();
+                $("#next").hide();
+                goalMarker.setMap(null);
+                marker.setMap(null);
+                $.post("/update", function() {
+                    $('#over_map').load(location.href + ' #over_map');
+                });
+            }
+        </script>
+        <script src="https://maps.googleapis.com/maps/api/js?callback=initMap"
+            async defer></script>
 
 
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
