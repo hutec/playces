@@ -1,25 +1,27 @@
 import os
-import json
+#import json
 from flask import Blueprint, request, redirect, render_template, flash, g, session,\
             url_for
+
 from app import app
 from pprint import pprint
 import urllib
+import jsonpickle
 from app import places
 from app import scores
+from places import Location
+
+@app.route('/')
+def index():
+    place = places.get_random_location()
+    locations = places.get_all_locations()
+    session['locations'] = jsonpickle.encode(locations)
+    return render_template('index.html', places=locations[session['index']].name)
 
 @app.route('/reset')
 def reset():
     session['index'] = 0
     return redirect(url_for('index'))
-
-@app.route('/')
-def index():
-    name, latLng = places.get_random_location()
-    locations = places.get_all_locations()
-    #print(name)
-    session['locations'] = locations
-    return render_template('index.html', name=session['locations'][session['index']][0])
 
 @app.route('/submit', methods=['POST'])
 def submit():
@@ -41,4 +43,3 @@ def submit():
     print(session['index'])
     return render_template('index.html', name=session['locations'][session['index']][0],
                            result=result_str)
-
