@@ -2,6 +2,7 @@ import os
 #import json
 from flask import Blueprint, request, redirect, render_template, flash, g, session,\
             url_for
+
 from app import app
 from pprint import pprint
 import urllib
@@ -13,7 +14,6 @@ from places import Location
 def index():
     place = places.get_random_location()
     locations = places.get_all_locations()
-    #print(name)
     session['locations'] = jsonpickle.encode(locations)
     return render_template('index.html', places=locations[session['index']].name)
 
