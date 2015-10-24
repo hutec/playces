@@ -3,11 +3,16 @@ import json
 #import requests
 from googleplaces import GooglePlaces, types, lang
 from app import app
+import random
 
 google_places = GooglePlaces(app.config['API_KEY'])
+city = "Karlsruhe, Germany"
+keywords = "Shopping"
+query_results = google_places.nearby_search(
+        location=city, 
+        keyword=keywords,
+        radius=20000)
 
-def get_location(location, keyword):
-    query_result = google_places.nearby_search(
-            location=location, keyword=keyword,
-            radius=20000)
-    return [query_result.places[0].name, query_result.places[0].geo_location]
+def get_random_location():
+    random_place = random.choice(query_results.places)
+    return [random_place.name, random_place.geo_location]

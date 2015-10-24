@@ -9,7 +9,7 @@ from app import places
 
 @app.route('/')
 def index():
-    name, latLng = places.get_location("Karlsruhe, Germany", "Doener")
+    name, latLng = places.get_random_location()
     print(name)
     session['current_location'] = [name, latLng]
     return render_template('index.html')
