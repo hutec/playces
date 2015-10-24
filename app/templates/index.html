@@ -42,11 +42,12 @@
                     {{ result }}
                     <button type="submit" class="btn btn-primary"
                             id="submit" onclick="submitMarker()">Take Guess</button>
-                    <button type="submit" class="btn btn-primary"
-                                          id="next"
+                    <button type="submit" class="btn btn-primary" id="next"
                             onclick="nextGuess()">Next Guest</button>
-                 {% endif %}
-               </div>
+                {% endif %}
+                <div><h5> </h5></div>
+                <div id="distance"></div>
+            </div>
             <div id="map"></div>
         </div>
 
@@ -101,11 +102,14 @@
                     type: 'PUT',
                     url: '/verify',
                     data: {
+
                         lat: marker.position.lat(),
                         lng: marker.position.lng()
                     },
                     success: function(data) {
                         var goalLatLng = {lat: data['lat'], lng: data['lng']};
+                        distance = (data['distance'] * 1000).toFixed(2) ;
+                        document.getElementById("distance").innerHTML = '<h5>Distance: ' + distance + 'm</h5>';
                         goalMarker = new google.maps.Marker({
                             position: goalLatLng,
                             map: map
