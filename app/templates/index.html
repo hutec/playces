@@ -41,6 +41,9 @@
                         <input type="hidden" name="data" value="" />
                         <button type="submit" class="btn btn-primary"
                                 id="submit" onclick="submitMarker()">Take Guess</button>
+                        <button type="submit" class="btn btn-primary"
+                                              id="next"
+                                onclick="nextGuess()">Next Guest</button>
                          {% endif %}
                        </div>
                     <div id="map"></div>
@@ -49,6 +52,7 @@
                 <script>
                     var map;
                     var marker;
+                    var goalMarker;
                     function initMap() {
                       map = new google.maps.Map(document.getElementById('map'), {
                         center: {lat: 49.009148, lng: 8.3799},
@@ -76,7 +80,7 @@
                     }
 
                     function placeMarker(latLng, map) {
-                        if (marker) {
+                        if (marker && marker.getMap() != null) {
                             marker.setPosition(latLng);
                         } else {
                             marker = new google.maps.Marker({
@@ -92,14 +96,35 @@
                     }
 
                     function submitMarker() {
-                        $.post("/submit", {
-                            lat: marker.position.lat(),
-                            lng: marker.position.lng()
-                        }, function() {
-                            $('#over_map').load(location.href + ' #over_map');
-                            //location.reload(true)
+                        $.ajax({
+                            type: 'PUT',
+                            url: '/verify',
+                            data: {
+                                lat: marker.position.lat(),
+                                lng: marker.position.lng()
+                            },
+                            success: function(data) {
+                                var goalLatLng = {lat: data['lat'], lng: data['lng']};
+                                goalMarker = new google.maps.Marker({
+                                    position: goalLatLng,
+                                    map: map
+                                });
+                                goalMarker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
+                            }
                         });
 
+                        $("#submit").hide();
+                        $("#next").css("display", "inline");
+                    }
+
+                    function nextGuess() {
+                        $("#submit").show();
+                        $("#next").hide();
+                        goalMarker.setMap(null);
+                        marker.setMap(null);
+                        $.post("/update", function() {
+                            $('#over_map').load(location.href + ' #over_map');
+                        });
                     }
                 </script>
                 <script src="https://maps.googleapis.com/maps/api/js?callback=initMap"

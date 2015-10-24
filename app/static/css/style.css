@@ -6,6 +6,10 @@ html, body {
     padding: 0;
 }
 
+#next {
+    display: none;
+}
+
 body {
     padding-top: 50px;
 }
@@ -17,6 +21,7 @@ body {
 }
 
 #over_map {
+    text-align: center;
     position: fixed;
     top: 60;
     left: 10;

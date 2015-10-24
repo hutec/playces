@@ -32,3 +32,9 @@ def submit():
     print(session['index'])
     return render_template("index.html", name=jsonpickle.decode(session['locations'])[session['index']].name)
 
+@app.route('/update', methods=['POST'])
+def update():
+    return render_template("index.html", name=jsonpickle.decode(session['locations'])[session['index']].name)
+
+
+
