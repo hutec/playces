@@ -28,15 +28,14 @@ def submit():
     lat = request.values['lat']
     lng = request.values['lng']
     print('New entry (' + str(lat) + ',' + str(lng) + ') was successfully posted')
-    current_place = session['locations'][session['index']]
-    distance = places.calculate_distance(current_place[1], {'lat': float(lat),
-        'lng': float(lng)})
-    print distance
+    current_place = jsonpickle.decode(session['locations'])[session['index']]
+    distance = places.calculate_distance(current_place,
+                                        Location("", "", {'lat':lat, 'lng':lng}))
 
-    print(current_place)
+    percentile = scores.add_and_get_percentile(current_place.id, distance)
+    result_str = "Under best " + str(percentile) + "%"
 
- #   percentile = scores.add_and_get_percentile(current_place.id, distance)
-    result_str = "You were better than " + str(100 - 0) + " others"
+    print(result_str)
 
     session['index'] = session['index'] + 1
     session.modified = True
