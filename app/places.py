@@ -13,4 +13,3 @@ query_result = google_places.nearby_search(
 for place in query_result.places:
     print place.name
     print place.geo_location
-
