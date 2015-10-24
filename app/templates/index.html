@@ -90,12 +90,17 @@
                     }
 
                     function submitMarker() {
+                        var goalLatLng = {lat: {{ lat|safe }}, lng: {{ lng|safe }} };
+                        var goalMarker = new google.maps.Marker({
+                            position: goalLatLng,
+                            map: map
+                        });
+
                         $.post("/submit", {
                             lat: marker.position.lat(),
                             lng: marker.position.lng()
                         }, function() {
                             $('#over_map').load(location.href + ' #over_map');
-                            //location.reload(true)
                         });
 
                     }

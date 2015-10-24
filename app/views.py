@@ -2,6 +2,7 @@ import os
 import json
 from flask import Blueprint, request, redirect, render_template, flash, g, session,\
             url_for
+
 from app import app
 from pprint import pprint
 import urllib
@@ -16,9 +17,12 @@ def reset():
 def index():
     name, latLng = places.get_random_location()
     locations = places.get_all_locations()
-    #print(name)
     session['locations'] = locations
-    return render_template('index.html', name=session['locations'][session['index']][0])
+    latLng = session['locations'][session['index']][1]
+    return render_template('index.html',
+            name=session['locations'][session['index']][0],
+            lat = latLng['lat'],
+            lng = latLng['lng'])
 
 @app.route('/submit', methods=['POST'])
 def submit():
@@ -31,5 +35,9 @@ def submit():
     session['index'] = session['index'] + 1
     session.modified = True
     print(session['index'])
-    return render_template('index.html', name=session['locations'][session['index']][0])
+    latLng = session['locations'][session['index']][1]
+    return render_template('index.html',
+            name=session['locations'][session['index']][0],
+            lat = latLng['lat'],
+            lng = latLng['lng'])
 
