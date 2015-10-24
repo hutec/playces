@@ -3,10 +3,21 @@ import json
 #import requests
 from googleplaces import GooglePlaces, types, lang
 from app import app
+<<<<<<< HEAD
 from math import sin, cos, sqrt, atan2, radians
+=======
+import random
+>>>>>>> fc81f52bebc43b9e09eff1d31c62d7f0d79946c0
 
 google_places = GooglePlaces(app.config['API_KEY'])
+city = "Karlsruhe, Germany"
+keywords = "Shopping"
+query_results = google_places.nearby_search(
+        location=city, 
+        keyword=keywords,
+        radius=20000)
 
+<<<<<<< HEAD
 def get_location(location, keyword):
     query_result = google_places.nearby_search(
             location=location, keyword=keyword,
@@ -33,3 +44,8 @@ def calculate_distance(guessed_location, actual_location):
     print("Result:", distance)
 
     return distance
+=======
+def get_random_location():
+    random_place = random.choice(query_results.places)
+    return [random_place.name, random_place.geo_location]
+>>>>>>> fc81f52bebc43b9e09eff1d31c62d7f0d79946c0
