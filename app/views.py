@@ -16,7 +16,8 @@ def index():
 
 @app.route('/submit', methods=['POST'])
 def submit():
-    print('New entry was successfully posted')
-    print(request.form['data'])
-    return redirect(url_for('index'))
+    lat = request.values['lat']
+    lng = request.values['lng']
+    print('New entry (' + str(lat) + ',' + str(lng) + ') was successfully posted')
+    return render_template("index.html")
 
