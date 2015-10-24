@@ -35,6 +35,7 @@
             <div class=" container-full">
                     <div id="map"></div>
                     <div id="over_map">
+                        <h1> Find {{ name }} </h1>
                             <input type="hidden" name="data" value="" />
                             <button type="submit" class="btn btn-primary"
                                 id="submit" onclick="submitMarker()">Take Guess</button>
@@ -47,7 +48,8 @@
                     function initMap() {
                       map = new google.maps.Map(document.getElementById('map'), {
                         center: {lat: 49.009148, lng: 8.3799},
-                        zoom: 13
+                        zoom: 13,
+                        disableDefaultUI: true
                       });
 
                       var customMapType = new google.maps.StyledMapType([
@@ -90,7 +92,7 @@
                             lat: marker.position.lat(),
                             lng: marker.position.lng()
                         });
-                        
+
                     }
                 </script>
                 <script src="https://maps.googleapis.com/maps/api/js?callback=initMap"
