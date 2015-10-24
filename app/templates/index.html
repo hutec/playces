@@ -43,6 +43,20 @@
                         zoom: 13
                       });
 
+                      var customMapType = new google.maps.StyledMapType([
+                              {
+                                  featureType: "all",
+                                  elementType: "labels",
+                                  stylers: [
+                                  { visibility: "off" }
+                                  ]
+                              }
+                      ]);
+                      var customMapTypeId = 'custom_style';
+
+                      map.mapTypes.set(customMapTypeId, customMapType);
+                      map.setMapTypeId(customMapTypeId);
+
                       map.addListener('click', function(e) {
                           placeMarker(e.latLng, map);
                       });
