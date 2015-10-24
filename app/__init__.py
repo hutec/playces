@@ -1,10 +1,11 @@
 import os
 import sys
+import config
 
 from flask import Flask, render_template
 
 app = Flask(__name__)
-#app.config.from_object('config')
+app.config.from_object('config')
 
 from app import views
 
