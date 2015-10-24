@@ -55,4 +55,4 @@ def get_random_location():
 
 def get_all_locations():
     return [[place.name, place.geo_location] 
-            for place in query_results.places]
+            for place in sorted_results]
