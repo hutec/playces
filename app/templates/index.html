@@ -35,9 +35,9 @@
             <div class=" container-full">
                     <div id="map"></div>
                     <div id="over_map">
-                        <form action="{{ url_for('submit') }}" method="post">
-
-                           <button type="submit" class="btn btn-primary" id="submit">Take Guess</button>
+                        <form id="data" action="{{ url_for('submit') }}" method="post">
+                            <input type="hidden" name="data" value="" />
+                            <button type="submit" class="btn btn-primary" id="submit">Take Guess</button>
                         </form>
                 </div>
             </div>
@@ -79,6 +79,11 @@
                                 map: map
                             });
                         }
+
+                        var formInfo = document.forms['data'];
+
+                        formInfo.elements["data"].value = marker.position;
+
                     }
                 </script>
                 <script src="https://maps.googleapis.com/maps/api/js?callback=initMap"
