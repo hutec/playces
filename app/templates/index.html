@@ -33,12 +33,14 @@
         </nav>
 
             <div class=" container-full">
-                    <div id="map"></div>
-                    <div id="over_map">
-                        <h1> Find {{ name }} </h1>
-                            <input type="hidden" name="data" value="" />
-                            <button type="submit" class="btn btn-primary"
-                                id="submit" onclick="submitMarker()">Take Guess</button>
+                <div id="map"></div>
+                <div id="over_map">
+                    {% if place %}
+                    <h1> Find {{ place.name }} </h1>
+                    <input type="hidden" name="data" value="" />
+                    <button type="submit" class="btn btn-primary"
+                        id="submit" onclick="submitMarker()">Take Guess</button>
+                    {% endif %}
                 </div>
             </div>
 
