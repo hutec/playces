@@ -44,4 +44,6 @@ def submit():
 
 @app.route('/update', methods=['POST'])
 def update():
-    return render_template("index.html", name=jsonpickle.decode(session['locations'])[session['index']].name)
+    while session['index'] < len(jsonpickle.decode(session['locations'])):
+        return render_template("index.html", name=jsonpickle.decode(session['locations'])[session['index']].name)
+    return redirect(url_for('reset'))
