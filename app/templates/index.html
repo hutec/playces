@@ -27,19 +27,27 @@
                     <ul class="nav navbar-nav">
                         <li class="active"><a href="#">Home</a></li>
                         <li><a href="#">Next Guess</a></li>
+                        <li><a href="reset">Reset</a></li>
                     </ul>
                 </div><!--/.nav-collapse -->
             </div>
         </nav>
 
+<<<<<<< HEAD
             <div class=" container-full">
                     <div id="map"></div>
                     <div id="over_map" class="card">
                         <h2> Find {{ name }} </h2>
                             <input type="hidden" name="data" value="" />
+=======
+            <div class="container-full">
+                    <div id="over_map">
+                        <h1> Find {{ name }} </h1>
+>>>>>>> 21e1392d46114199cbbd0dd442c9dfa8af145794
                             <button type="submit" class="btn btn-primary"
                                 id="submit" onclick="submitMarker()">Take Guess</button>
-                </div>
+                    </div>
+                    <div id="map"></div>
             </div>
 
                 <script>
@@ -91,6 +99,9 @@
                         $.post("/submit", {
                             lat: marker.position.lat(),
                             lng: marker.position.lng()
+                        }, function() {
+                            $('#over_map').load(location.href + ' #over_map');
+                            //location.reload(true)
                         });
 
                     }

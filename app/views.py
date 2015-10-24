@@ -7,20 +7,29 @@ from pprint import pprint
 import urllib
 from app import places
 
+@app.route('/reset')
+def reset():
+    session['index'] = 0
+    return redirect(url_for('index'))
+
 @app.route('/')
 def index():
     name, latLng = places.get_random_location()
-    print(name)
-    session['current_location'] = [name, latLng]
-    session['latLng'] = latLng
-    return render_template('index.html', name=name)
+    locations = places.get_all_locations()
+    #print(name)
+    session['locations'] = locations
+    return render_template('index.html', name=session['locations'][session['index']][0])
 
 @app.route('/submit', methods=['POST'])
 def submit():
     lat = request.values['lat']
     lng = request.values['lng']
     print('New entry (' + str(lat) + ',' + str(lng) + ') was successfully posted')
-    print(places.calculate_distance(session['latLng'], {'lat': float(lat),
+    print(places.calculate_distance(session['locations'][session['index']][1], {'lat': float(lat),
         'lng': float(lng)}))
-    return render_template("index.html")
+
+    session['index'] = session['index'] + 1
+    session.modified = True
+    print(session['index'])
+    return render_template('index.html', name=session['locations'][session['index']][0])
 
