@@ -32,11 +32,16 @@
             </div>
         </nav>
 
-            <div class="container">
-                <div id="map"></div>
+            <div class=" container-full">
+                    <div id="map"></div>
+                    <div id="over_map">
+                        <button type="button" class="btn btn-primary" id="submit">Take Guess</button>
+                    </div>
             </div>
+
                 <script>
                     var map;
+                    var marker;
                     function initMap() {
                       map = new google.maps.Map(document.getElementById('map'), {
                         center: {lat: 49.009148, lng: 8.3799},
@@ -63,10 +68,14 @@
                     }
 
                     function placeMarker(latLng, map) {
-                        var marker = new google.maps.Marker({
-                            position: latLng,
-                            map: map
-                        });
+                        if (marker) {
+                            marker.setPosition(latLng);
+                        } else {
+                            marker = new google.maps.Marker({
+                                position: latLng,
+                                map: map
+                            });
+                        }
                     }
                 </script>
                 <script src="https://maps.googleapis.com/maps/api/js?callback=initMap"
