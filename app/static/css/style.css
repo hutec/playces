@@ -37,6 +37,7 @@ body {
 }
 
 .card {
+    text-align: center;
     display: block;
     width: 40rem;
     margin: 1rem;
