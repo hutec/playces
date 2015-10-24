@@ -12,7 +12,7 @@ def index():
     name, latLng = places.get_random_location()
     print(name)
     session['current_location'] = [name, latLng]
-    return render_template('index.html')
+    return render_template('index.html', name=name)
 
 @app.route('/submit', methods=['POST'])
 def submit():
