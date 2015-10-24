@@ -26,7 +26,7 @@ def reset():
 def submit():
     guessed = Location("Guessed location", request.values)
     print('New entry (' + str(guessed.latitude) + ',' + str(guessed.longitude) + ') was successfully posted')
-    print(places.calculate_distance(jsonpickle.decode(session['place']), guessed))
+    print(places.calculate_distance(jsonpickle.decode(session['locations'])[session['index']], guessed))
     session['index'] = session['index'] + 1
     session.modified = True
     print(session['index'])

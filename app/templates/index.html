@@ -35,14 +35,15 @@
 
             <div class=" container-full">
                     <div id="map"></div>
-                    <div id="over_map">
-                    	{% if places %}
-                            <h2> Find {{ places }} </h2>
-                            <input type="hidden" name="data" value="" />
-                            <button type="submit" class="btn btn-primary"
+                    <div id="over_map" class="card">
+                        {% if places %}
+                        <h3>{{ places }}</h3>
+                        <input type="hidden" name="data" value="" />
+                        <button type="submit" class="btn btn-primary"
                                 id="submit" onclick="submitMarker()">Take Guess</button>
-                        {% endif %}
-		</div>
+                         {% endif %}
+                       </div>
+                    <div id="map"></div>
             </div>
 
                 <script>
@@ -96,7 +97,7 @@
                             lng: marker.position.lng()
                         }, function() {
                             $('#over_map').load(location.href + ' #over_map');
-                            //location.reload(true)
+                            location.reload(true)
                         });
 
                     }

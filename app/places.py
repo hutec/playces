@@ -1,10 +1,13 @@
 import os
-#import json
+import json
 #import requests
 from googleplaces import GooglePlaces, types, lang
 from app import app
 from math import sin, cos, sqrt, atan2, radians
 import random
+import pickle
+
+mock = True
 
 def my_key(place):
     if "reviews" in place.details:
@@ -15,10 +18,15 @@ def my_key(place):
 google_places = GooglePlaces(app.config['API_KEY'])
 city = "Karlsruhe, Germany"
 keywords = "Restaurants"
-query_results = google_places.nearby_search(
-        location=city,
-        keyword=keywords,
-        radius=5000)
+
+if mock:
+    query_results = pickle.load(open("results.p", "rb"))
+else:
+    query_results = google_places.nearby_search(
+            location=city,
+            keyword=keywords,
+            radius=5000)
+
 
 # has to be called in order for the details to be fetched
 for p in query_results.places:
@@ -56,7 +64,7 @@ def get_random_location():
 
 def get_all_locations():
     return [Location(place.name, place.geo_location)
-            for place in query_results.places]
+            for place in sorted_results]
 
 class Location:
     def __init__(self, name, geo_location):
