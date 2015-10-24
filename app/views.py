@@ -6,6 +6,7 @@ from app import app
 from pprint import pprint
 import urllib
 from app import places
+from app import scores
 
 @app.route('/reset')
 def reset():
@@ -25,11 +26,19 @@ def submit():
     lat = request.values['lat']
     lng = request.values['lng']
     print('New entry (' + str(lat) + ',' + str(lng) + ') was successfully posted')
-    print(places.calculate_distance(session['locations'][session['index']][1], {'lat': float(lat),
-        'lng': float(lng)}))
+    current_place = session['locations'][session['index']]
+    distance = places.calculate_distance(current_place[1], {'lat': float(lat),
+        'lng': float(lng)})
+    print distance
+
+    print(current_place)
+
+ #   percentile = scores.add_and_get_percentile(current_place.id, distance)
+    result_str = "You were better than " + str(100 - 0) + " others"
 
     session['index'] = session['index'] + 1
     session.modified = True
     print(session['index'])
-    return render_template('index.html', name=session['locations'][session['index']][0])
+    return render_template('index.html', name=session['locations'][session['index']][0],
+                           result=result_str)
 
