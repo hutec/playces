@@ -44,8 +44,8 @@
 
         <div class=" container-full">
             <div id="map"></div>
+            {% if places %}
             <div id="over_map" class="card">
-                {% if places %}
                     <h3>{{ places }}</h3>
                     <input type="hidden" name="data" value="" />
                     {{ result }}
@@ -53,11 +53,10 @@
                             id="submit" onclick="submitMarker()">Take Guess</button>
                     <button type="submit" class="btn btn-primary" id="next"
                             onclick="nextGuess()">Next Guest</button>
-                {% endif %}
                 <div><h5> </h5></div>
                 <div id="distance"></div>
             </div>
-            <div id="map"></div>
+            {% endif %}
         </div>
 
         <script>
