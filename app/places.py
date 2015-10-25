@@ -41,10 +41,10 @@ def new_game(new_city, keywords):
     print("Next results are in" + new_city)
     global city
     city = new_city
-    query_results = google_places.nearby_search(
+    query_results = google_places.text_search(
             location=city,
-            keyword=keywords,
-            radius=5000)
+            query=keywords,
+            radius=10000)
 
     # has to be called in order for the details to be fetched
     for p in query_results.places:
