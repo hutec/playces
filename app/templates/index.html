@@ -63,6 +63,7 @@
                             onclick="nextGuess()">Next Guest</button>
                 <div><h5> </h5></div>
                 <div id="distance"></div>
+                <div id="percentile"></div>
             </div>
             {% endif %}
         </div>
@@ -71,6 +72,7 @@
             var map;
             var marker;
             var goalMarker;
+            var guessed;
             function initMap() {
                 var geocoder = new google.maps.Geocoder();
                 var latLng;
@@ -106,22 +108,24 @@
             }
 
             function placeMarker(latLng, map) {
-                if (marker && marker.getMap() != null) {
-                    marker.setPosition(latLng);
-                } else {
-                    marker = new google.maps.Marker({
-                        position: latLng,
-                        map: map
-                    });
+                if (!guessed) {
+                    if (marker && marker.getMap() != null) {
+                        marker.setPosition(latLng);
+                    } else {
+                        marker = new google.maps.Marker({
+                            position: latLng,
+                            map: map
+                        });
+                    }
+
+                    var formInfo = document.forms['data'];
+
+                    formInfo.elements["data"].value = marker.position;
                 }
-
-                var formInfo = document.forms['data'];
-
-                formInfo.elements["data"].value = marker.position;
-
             }
 
             function submitMarker() {
+                guessed = true;
                 $.ajax({
                     type: 'PUT',
                     url: '/verify',
@@ -134,6 +138,7 @@
                         var goalLatLng = {lat: data['lat'], lng: data['lng']};
                         distance = (data['distance'] * 1000).toFixed(2) ;
                         document.getElementById("distance").innerHTML = '<h5>Distance: ' + distance + 'm</h5>';
+                        document.getElementById("percentile").innerHTML = '<h5>' + data['percentile'] + '</h5>';
                         goalMarker = new google.maps.Marker({
                             position: goalLatLng,
                             map: map
@@ -151,6 +156,7 @@
                 $("#next").hide();
                 goalMarker.setMap(null);
                 marker.setMap(null);
+                guessed = false;
                 $.post("/update", function() {
                     $('#over_map').load(location.href + ' #over_map');
                 });

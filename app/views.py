@@ -33,16 +33,19 @@ def submit():
     current_place = jsonpickle.decode(session['locations'])[session['index']]
     distance = places.calculate_distance(current_place,
                                         Location("", "", {'lat':lat, 'lng':lng}))
-
     percentile = scores.add_and_get_percentile(current_place.id, distance)
-    result_str = "Under best " + str(percentile) + "%"
+
+    result_string = "Under best " + percentile + "%"
 
     print(result_str)
+
+    session['percentile'] = percentile;
 
     session['index'] = session['index'] + 1
     session.modified = True
     print(session['index'])
-    return render_template("index.html", name=jsonpickle.decode(session['locations'])[session['index']].name)
+    return render_template("index.html", name=jsonpickle.decode(session['locations'])[session['index']].name,
+                           percentile=result_str)
 
 @app.route('/new', methods=['POST'])
 def new_game():
@@ -59,6 +62,8 @@ def new_game():
 
 @app.route('/update', methods=['POST'])
 def update():
+
     while session['index'] < len(jsonpickle.decode(session['locations'])):
-        return render_template("index.html", name=jsonpickle.decode(session['locations'])[session['index']].name)
+        return render_template("index.html", name=jsonpickle.decode(session['locations'])[session['index']].name,
+                               percentile='adfijnfsdaf')
     return redirect(url_for('reset'))
