@@ -64,6 +64,7 @@
             var map;
             var marker;
             var goalMarker;
+            var guessed;
             function initMap() {
                 map = new google.maps.Map(document.getElementById('map'), {
                     center: {lat: 49.009148, lng: 8.3799},
@@ -89,22 +90,24 @@
             }
 
             function placeMarker(latLng, map) {
-                if (marker && marker.getMap() != null) {
-                    marker.setPosition(latLng);
-                } else {
-                    marker = new google.maps.Marker({
-                        position: latLng,
-                        map: map
-                    });
+                if (!guessed) {
+                    if (marker && marker.getMap() != null) {
+                        marker.setPosition(latLng);
+                    } else {
+                        marker = new google.maps.Marker({
+                            position: latLng,
+                            map: map
+                        });
+                    }
+
+                    var formInfo = document.forms['data'];
+
+                    formInfo.elements["data"].value = marker.position;
                 }
-
-                var formInfo = document.forms['data'];
-
-                formInfo.elements["data"].value = marker.position;
-
             }
 
             function submitMarker() {
+                guessed = true;
                 $.ajax({
                     type: 'PUT',
                     url: '/verify',
@@ -135,6 +138,7 @@
                 $("#next").hide();
                 goalMarker.setMap(null);
                 marker.setMap(null);
+                guessed = false;
                 $.post("/update", function() {
                     $('#over_map').load(location.href + ' #over_map');
                 });
