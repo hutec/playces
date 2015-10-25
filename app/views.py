@@ -15,7 +15,7 @@ from places import Location
 def index():
     locations = places.get_all_locations()
     session['locations'] = jsonpickle.encode(locations)
-    if locations is None or session['index'] > len(session['locations']) - 1:
+    if locations is None or session['index'] > len(session['locations']) - 2:
         return render_template('index.html') 
     return render_template('index.html',
             places=locations[session['index']].name, city=places.get_city())
