@@ -69,6 +69,6 @@ def get_all_locations():
 class Location:
     def __init__(self, name, id_str, geo_location):
         self.name = name
+        self.id = id_str
         self.longitude = float(geo_location['lng'])
         self.latitude = float(geo_location['lat'])
-        self.id = id_str

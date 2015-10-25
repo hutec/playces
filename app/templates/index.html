@@ -56,29 +56,27 @@
             var marker;
             var goalMarker;
             function initMap() {
-              map = new google.maps.Map(document.getElementById('map'), {
-                center: {lat: 49.009148, lng: 8.3799},
-                zoom: 13,
-                disableDefaultUI: true
-              });
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: {lat: 49.009148, lng: 8.3799},
+                    zoom: 13,
+                    disableDefaultUI: true
+                });
 
-              var customMapType = new google.maps.StyledMapType([
-                      {
-                          featureType: "all",
-                          elementType: "labels",
-                          stylers: [
-                          { visibility: "off" }
-                          ]
-                      }
-              ]);
-              var customMapTypeId = 'custom_style';
+            var customMapType = new google.maps.StyledMapType([{
+                featureType: "all",
+                elementType: "labels",
+                stylers: [
+                    { visibility: "off" }
+                ]
+            }]);
+            var customMapTypeId = 'custom_style';
 
-              map.mapTypes.set(customMapTypeId, customMapType);
-              map.setMapTypeId(customMapTypeId);
+            map.mapTypes.set(customMapTypeId, customMapType);
+            map.setMapTypeId(customMapTypeId);
 
-              map.addListener('click', function(e) {
-                  placeMarker(e.latLng, map);
-              });
+            map.addListener('click', function(e) {
+                placeMarker(e.latLng, map);
+            });
             }
 
             function placeMarker(latLng, map) {
