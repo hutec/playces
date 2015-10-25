@@ -15,7 +15,10 @@ from places import Location
 def index():
     locations = places.get_all_locations()
     session['locations'] = jsonpickle.encode(locations)
-    if locations is None or session['index'] > len(jsonpickle.decode(session['locations'])) - 2:
+    if locations:
+        print(len(locations))
+
+    if locations is None or session['index'] > len(locations):
         return render_template('index.html')
     return render_template('index.html',
         places=locations[session['index']].name, city=places.get_city())
@@ -66,4 +69,5 @@ def update():
     while session['index'] < len(jsonpickle.decode(session['locations'])):
         return render_template("index.html", name=jsonpickle.decode(session['locations'])[session['index']].name,
                                percentile='adfijnfsdaf')
+    print("you have seen them all - restart?")
     return redirect(url_for('reset'))
