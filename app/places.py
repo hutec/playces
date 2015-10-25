@@ -8,7 +8,9 @@ import random
 import pickle
 
 mock = True
+use_sort = False
 sorted_results = None
+city = "Karlsruhe, Germany"
 
 # def my_key(place):
 #     if "reviews" in place.details:
@@ -34,9 +36,11 @@ sorted_results = None
 # # sorted by number of reviews in descending order
 # sorted_results = sorted(query_results.places, key=my_key, reverse=True)
 
-def new_game(city, keywords):
+def new_game(new_city, keywords):
     google_places = GooglePlaces(app.config['API_KEY'])
-    city = "Karlsruhe, Germany"
+    print("Next results are in" + new_city)
+    global city
+    city = new_city
     query_results = google_places.nearby_search(
             location=city,
             keyword=keywords,
@@ -83,6 +87,11 @@ def get_all_locations():
         return None
     return [Location(place.name, place.id, place.geo_location)
             for place in sorted_results]
+
+def get_city():
+    global city
+    print(city)
+    return city
 
 class Location:
     def __init__(self, name, id_str, geo_location):

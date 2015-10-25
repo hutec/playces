@@ -25,18 +25,26 @@
                 </div>
                 <div id="navbar" class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
-                        <li class="active"><a href="#">Home</a></li>
+                        <li class="active"><a href="#">{{city}}</a></li>
                         <li><a href="reset">Reset</a></li>
                     </ul>
 
-                    <form action="/new" method="post" class="navbar-form" role="search">
+                    <form action="/new" method="post" class="navbar-form
+                        input-prepend" role="search">
                         <div class="input-group">
                             <input type="text"
                                    class="form-control"
-                                   placeholder="Search"
-                                   name="keyword" id="keyword">
-                            </div>
+                                   placeholder="City"
+                                   name="city" id="city">
                         </div>
+                        <div class="input-group">
+                            <input type="text"
+                                   class="form-control"
+                                   placeholder="Keywords"
+                                   name="keyword" id="keyword">
+                        </div>
+                        <button type="submit" class="btn btn-primary"
+                            id="new_btn">New Game</button>
                     </form>
                 </div><!--/.nav-collapse -->
             </div>
@@ -64,11 +72,21 @@
             var marker;
             var goalMarker;
             function initMap() {
+                var geocoder = new google.maps.Geocoder();
+                var latLng;
                 map = new google.maps.Map(document.getElementById('map'), {
-                    center: {lat: 49.009148, lng: 8.3799},
+                    //center: {lat: 49.009148, lng: 8.3799},
+                    //center: latLng,
                     zoom: 13,
                     disableDefaultUI: true
                 });
+                geocoder.geocode({'address': "{{ city|safe }}"}, 
+                        function(results, status) {
+                            latLng = results[0].geometry.location;
+                            map.setCenter(latLng);
+                        }
+                );
+                
 
             var customMapType = new google.maps.StyledMapType([{
                 featureType: "all",
@@ -137,6 +155,7 @@
                     $('#over_map').load(location.href + ' #over_map');
                 });
             }
+
         </script>
         <script src="https://maps.googleapis.com/maps/api/js?callback=initMap"
             async defer></script>

@@ -15,9 +15,10 @@ from places import Location
 def index():
     locations = places.get_all_locations()
     session['locations'] = jsonpickle.encode(locations)
-    if locations is None:
+    if locations is None or session['index'] > len(session['locations']) - 1:
         return render_template('index.html') 
-    return render_template('index.html', places=locations[session['index']].name)
+    return render_template('index.html',
+            places=locations[session['index']].name, city=places.get_city())
 
 @app.route('/reset')
 def reset():
@@ -47,13 +48,12 @@ def submit():
 def new_game():
     print("New keywords: " + request.form['keyword'])
     keywords = request.form['keyword']
-    places.new_game("Karlsruhe, Germany", keywords)
+    city = request.form['city']
+    places.new_game(city, keywords)
     locations = places.get_all_locations()
     session['locations'] = jsonpickle.encode(locations)
     session['index'] = 0
-    print(session['locations'])
     session.modified = True
-    #return redirect(url_for('index'))
     return redirect('/')
 
 
