@@ -15,10 +15,10 @@ from places import Location
 def index():
     locations = places.get_all_locations()
     session['locations'] = jsonpickle.encode(locations)
-    if locations is None or session['index'] > len(session['locations']) - 2:
-        return render_template('index.html') 
+    if locations is None or session['index'] > len(jsonpickle.decode(session['locations'])) - 2:
+        return render_template('index.html')
     return render_template('index.html',
-            places=locations[session['index']].name, city=places.get_city())
+        places=locations[session['index']].name, city=places.get_city())
 
 @app.route('/reset')
 def reset():

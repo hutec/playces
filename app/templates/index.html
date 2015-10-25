@@ -73,22 +73,22 @@
             var marker;
             var goalMarker;
             var guessed;
+            var cityLatLng;
             function initMap() {
                 var geocoder = new google.maps.Geocoder();
-                var latLng;
                 map = new google.maps.Map(document.getElementById('map'), {
                     //center: {lat: 49.009148, lng: 8.3799},
                     //center: latLng,
                     zoom: 13,
                     disableDefaultUI: true
                 });
-                geocoder.geocode({'address': "{{ city|safe }}"}, 
+                geocoder.geocode({'address': "{{ city|safe }}"},
                         function(results, status) {
-                            latLng = results[0].geometry.location;
-                            map.setCenter(latLng);
+                            cityLatLng = results[0].geometry.location;
+                            map.setCenter(cityLatLng);
                         }
                 );
-                
+
 
             var customMapType = new google.maps.StyledMapType([{
                 featureType: "all",
@@ -125,12 +125,18 @@
             }
 
             function submitMarker() {
+                if (!marker) {
+                    marker = new google.maps.Marker({
+                        position: cityLatLng,
+                        map: map
+                    });
+                }
+
                 guessed = true;
                 $.ajax({
                     type: 'PUT',
                     url: '/verify',
                     data: {
-
                         lat: marker.position.lat(),
                         lng: marker.position.lng()
                     },
