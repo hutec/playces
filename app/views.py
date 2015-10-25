@@ -28,27 +28,27 @@ def reset():
     session['index'] = 0
     return redirect(url_for('index'))
 
-@app.route('/submit', methods=['POST'])
-def submit():
-    lat = request.values['lat']
-    lng = request.values['lng']
-    print('New entry (' + str(lat) + ',' + str(lng) + ') was successfully posted')
-    current_place = jsonpickle.decode(session['locations'])[session['index']]
-    distance = places.calculate_distance(current_place,
-                                        Location("", "", {'lat':lat, 'lng':lng}))
-    percentile = scores.add_and_get_percentile(current_place.id, distance)
-
-    result_string = "Under best " + percentile + "%"
-
-    print(result_str)
-
-    session['percentile'] = percentile;
-
-    session['index'] = session['index'] + 1
-    session.modified = True
-    print(session['index'])
-    return render_template("index.html", name=jsonpickle.decode(session['locations'])[session['index']].name,
-                           percentile=result_str)
+#@app.route('/submit', methods=['POST'])
+#def submit():
+#    lat = request.values['lat']
+#    lng = request.values['lng']
+#    print('New entry (' + str(lat) + ',' + str(lng) + ') was successfully posted')
+#    current_place = jsonpickle.decode(session['locations'])[session['index']]
+#    distance = places.calculate_distance(current_place,
+#                                        Location("", "", {'lat':lat, 'lng':lng}))
+#    percentile = scores.add_and_get_percentile(current_place.id, distance)
+#
+#    result_string = "Under best " + percentile + "%"
+#
+#    print(result_str)
+#
+#    session['percentile'] = percentile;
+#
+#    session['index'] = session['index'] + 1
+#    session.modified = True
+#    print(session['index'])
+#    return render_template("index.html", name=jsonpickle.decode(session['locations'])[session['index']].name,
+#                           percentile=result_str)
 
 @app.route('/new', methods=['POST'])
 def new_game():

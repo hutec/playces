@@ -50,14 +50,15 @@ def new_game(new_city, keywords):
     except ValueError:
         print("city not found")
     # has to be called in order for the details to be fetched
-    if query_results:
-        for p in query_results.places:
-            p.get_details()
+    if not query_results == None:
+        if len(query_results.places) > 1:
+            for p in query_results.places:
+                p.get_details()
 
-        # sorted by number of reviews in descending order
-        global sorted_results
-        sorted_results = query_results.places
-        #sorted_results = sorted(query_results.places, key=my_key, reverse=True)
+            # sorted by number of reviews in descending order
+            global sorted_results
+            sorted_results = query_results.places
+            #sorted_results = sorted(query_results.places, key=my_key, reverse=True)
 
 
 def calculate_distance(guessed_location, actual_location):
