@@ -8,32 +8,48 @@ import random
 import pickle
 
 mock = True
+sorted_results = None
 
-def my_key(place):
-    if "reviews" in place.details:
-        return len(place.details["reviews"])
-    else:
-        return 0
+# def my_key(place):
+#     if "reviews" in place.details:
+#         return len(place.details["reviews"])
+#     else:
+#         return 0
+# 
+# if mock:
+#     query_results = pickle.load(open("results.p", "rb"))
+# else:
+#     google_places = GooglePlaces(app.config['API_KEY'])
+#     city = "Karlsruhe, Germany"
+#     keywords = "Kneipe"
+#     query_results = google_places.nearby_search(
+#             location=city,
+#             keyword=keywords,
+#             radius=5000)
+# 
+# # has to be called in order for the details to be fetched
+# for p in query_results.places:
+#     p.get_details()
+# 
+# # sorted by number of reviews in descending order
+# sorted_results = sorted(query_results.places, key=my_key, reverse=True)
 
-google_places = GooglePlaces(app.config['API_KEY'])
-city = "Karlsruhe, Germany"
-keywords = "Restaurants"
-
-if mock:
-    query_results = pickle.load(open("results.p", "rb"))
-else:
+def new_game(city, keywords):
+    google_places = GooglePlaces(app.config['API_KEY'])
+    city = "Karlsruhe, Germany"
     query_results = google_places.nearby_search(
             location=city,
             keyword=keywords,
             radius=5000)
 
+    # has to be called in order for the details to be fetched
+    for p in query_results.places:
+        p.get_details()
 
-# has to be called in order for the details to be fetched
-for p in query_results.places:
-    p.get_details()
-
-# sorted by number of reviews in descending order
-sorted_results = sorted(query_results.places, key=my_key, reverse=True)
+    # sorted by number of reviews in descending order
+    global sorted_results
+    sorted_results = query_results.places
+    #sorted_results = sorted(query_results.places, key=my_key, reverse=True)
 
 
 def calculate_distance(guessed_location, actual_location):
@@ -63,6 +79,8 @@ def get_random_location():
     return place
 
 def get_all_locations():
+    if sorted_results is None:
+        return None
     return [Location(place.name, place.id, place.geo_location)
             for place in sorted_results]
 

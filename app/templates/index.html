@@ -1,145 +1,157 @@
 <!DOCCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Playces</title>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Playces</title>
 
-        <!-- Bootstrap -->
-        <link href="static/css/bootstrap.min.css" rel="stylesheet">
-        <link href="static/css/style.css" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/css/style.css" rel="stylesheet">
 
-    </head>
-    <body>
-        <nav class="navbar navbar-inverse navbar-fixed-top">
-            <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="#">Playces</a>
-                </div>
-                <div id="navbar" class="collapse navbar-collapse">
-                    <ul class="nav navbar-nav">
-                        <li class="active"><a href="#">Home</a></li>
-                        <li><a href="#">Next Guess</a></li>
-                        <li><a href="reset">Reset</a></li>
-                    </ul>
-                </div><!--/.nav-collapse -->
-            </div>
-        </nav>
-
-        <div class=" container-full">
-            <div id="map"></div>
-            <div id="over_map" class="card">
-                {% if places %}
-                    <h3>{{ places }}</h3>
-                    <input type="hidden" name="data" value="" />
-                    <button type="submit" class="btn btn-primary"
-                            id="submit" onclick="submitMarker()">Take Guess</button>
-                    <button type="submit" class="btn btn-primary" id="next"
-                            onclick="nextGuess()">Next Guest</button>
-                {% endif %}
-                <div><h5> </h5></div>
-                <div id="distance"></div>
-                <div id="percentile"></div>
-            </div>
-            <div id="map"></div>
-            
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Playces</a>
         </div>
-        
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="reset">Reset</a></li>
+            </ul>
 
-        <script>
-            var map;
-            var marker;
-            var goalMarker;
-            function initMap() {
-                map = new google.maps.Map(document.getElementById('map'), {
-                    center: {lat: 49.009148, lng: 8.3799},
-                    zoom: 13,
-                    disableDefaultUI: true
-                });
+            <form action="/new" method="post" class="navbar-form" role="search">
+                <div class="input-group">
+                    <input type="text"
+                           class="form-control"
+                           placeholder="Search"
+                           name="keyword" id="keyword">
+                </div>
+        </div>
+        </form>
+    </div>
+    <!--/.nav-collapse -->
+    </div>
+</nav>
 
-            var customMapType = new google.maps.StyledMapType([{
-                featureType: "all",
-                elementType: "labels",
-                stylers: [
-                    { visibility: "off" }
-                ]
-            }]);
-            var customMapTypeId = 'custom_style';
+<div class=" container-full">
+    <div id="map"></div>
+    <div id="over_map" class="card">
+        {% if places %}
+            <h3>{{ places }}</h3>
+            <input type="hidden" name="data" value=""/>
+            {{ result }}
+            <button type="submit" class="btn btn-primary"
+                    id="submit" onclick="submitMarker()">Take Guess
+            </button>
+            <button type="submit" class="btn btn-primary" id="next"
+                    onclick="nextGuess()">Next Guest
+            </button>
+        {% endif %}
+        <div><h5></h5></div>
+        <div id="distance"></div>
+        <div id="percentile"></div>
+    </div>
+    <div id="map"></div>
+</div>
 
-            map.mapTypes.set(customMapTypeId, customMapType);
-            map.setMapTypeId(customMapTypeId);
+<script>
+    var map;
+    var marker;
+    var goalMarker;
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: 49.009148, lng: 8.3799},
+            zoom: 13,
+            disableDefaultUI: true
+        });
 
-            map.addListener('click', function(e) {
-                placeMarker(e.latLng, map);
+        var customMapType = new google.maps.StyledMapType([{
+            featureType: "all",
+            elementType: "labels",
+            stylers: [
+                {visibility: "off"}
+            ]
+        }]);
+        var customMapTypeId = 'custom_style';
+
+        map.mapTypes.set(customMapTypeId, customMapType);
+        map.setMapTypeId(customMapTypeId);
+
+        map.addListener('click', function (e) {
+            placeMarker(e.latLng, map);
+        });
+    }
+
+    function placeMarker(latLng, map) {
+        if (marker && marker.getMap() != null) {
+            marker.setPosition(latLng);
+        } else {
+            marker = new google.maps.Marker({
+                position: latLng,
+                map: map
             });
-            }
+        }
 
-            function placeMarker(latLng, map) {
-                if (marker && marker.getMap() != null) {
-                    marker.setPosition(latLng);
-                } else {
-                    marker = new google.maps.Marker({
-                        position: latLng,
-                        map: map
-                    });
-                }
+        var formInfo = document.forms['data'];
 
-                var formInfo = document.forms['data'];
+        formInfo.elements["data"].value = marker.position;
 
-                formInfo.elements["data"].value = marker.position;
+    }
 
-            }
+    function submitMarker() {
+        $.ajax({
+            type: 'PUT',
+            url: '/verify',
+            data: {
 
-            function submitMarker() {
-                $.ajax({
-                    type: 'PUT',
-                    url: '/verify',
-                    data: {
-
-                        lat: marker.position.lat(),
-                        lng: marker.position.lng()
-                    },
-                    success: function(data) {
-                        var goalLatLng = {lat: data['lat'], lng: data['lng']};
-                        distance = (data['distance'] * 1000).toFixed(2) ;
-                        document.getElementById("distance").innerHTML = '<h5>Distance: ' + distance + 'm</h5>';
-                        document.getElementById("percentile").innerHTML = '<h5>' + data['percentile'] + '</h5>';
-                        goalMarker = new google.maps.Marker({
-                            position: goalLatLng,
-                            map: map
-                        });
-                        goalMarker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
-                    }
+                lat: marker.position.lat(),
+                lng: marker.position.lng()
+            },
+            success: function (data) {
+                var goalLatLng = {lat: data['lat'], lng: data['lng']};
+                distance = (data['distance'] * 1000).toFixed(2);
+                document.getElementById("distance").innerHTML = '<h5>Distance: ' + distance + 'm</h5>';
+                document.getElementById("percentile").innerHTML = '<h5>' + data['percentile'] + '</h5>';
+                goalMarker = new google.maps.Marker({
+                    position: goalLatLng,
+                    map: map
                 });
-
-                $("#submit").hide();
-                $("#next").css("display", "inline");
+                goalMarker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
             }
+        });
 
-            function nextGuess() {
-                $("#submit").show();
-                $("#next").hide();
-                goalMarker.setMap(null);
-                marker.setMap(null);
-                $.post("/update", function() {
-                    $('#over_map').load(location.href + ' #over_map');
-                });
-            }
-        </script>
-        <script src="https://maps.googleapis.com/maps/api/js?callback=initMap"
-            async defer></script>
+        $("#submit").hide();
+        $("#next").css("display", "inline");
+    }
+
+    function nextGuess() {
+        $("#submit").show();
+        $("#next").hide();
+        goalMarker.setMap(null);
+        marker.setMap(null);
+        $.post("/update", function () {
+            $('#over_map').load(location.href + ' #over_map');
+        });
+    }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?callback=initMap"
+        async defer></script>
 
 
-        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-        <!-- Include all compiled plugins (below), or include individual files as needed -->
-        <script src="static/js/bootstrap.min.js"></script>
-    </body>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="static/js/bootstrap.min.js"></script>
+</body>
 </html>
