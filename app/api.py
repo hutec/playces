@@ -14,8 +14,9 @@ class MarkerSubmit(Resource):
         distance = places.calculate_distance(current_place, guessed)
         goal = jsonpickle.decode(session['locations'])[session['index']]
         session['index'] = session['index'] + 1
+        print(session['index'])
         session.modified = True
-                                             
+
         percentile = scores.add_and_get_percentile(current_place.id, distance)
         result_string = "Better than " + str(100 - percentile) + "%"
 

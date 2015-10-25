@@ -18,7 +18,7 @@ def index():
     if locations:
         print(len(locations))
 
-    if locations is None or session['index'] > len(locations):
+    if not index or locations is None or session['index'] > len(locations):
         return render_template('index.html')
     return render_template('index.html',
         places=locations[session['index']].name, city=places.get_city())

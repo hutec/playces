@@ -17,7 +17,7 @@ city = "Karlsruhe, Germany"
 #         return len(place.details["reviews"])
 #     else:
 #         return 0
-# 
+#
 # if mock:
 #     query_results = pickle.load(open("results.p", "rb"))
 # else:
@@ -28,32 +28,36 @@ city = "Karlsruhe, Germany"
 #             location=city,
 #             keyword=keywords,
 #             radius=5000)
-# 
+#
 # # has to be called in order for the details to be fetched
 # for p in query_results.places:
 #     p.get_details()
-# 
+#
 # # sorted by number of reviews in descending order
 # sorted_results = sorted(query_results.places, key=my_key, reverse=True)
 
 def new_game(new_city, keywords):
     google_places = GooglePlaces(app.config['API_KEY'])
-    print("Next results are in" + new_city)
+    print("Next results are in " + new_city)
     global city
     city = new_city
-    query_results = google_places.text_search(
-            location=city,
-            query=keywords,
-            radius=10000)
-
+    query_results = None
+    try:
+        query_results = google_places.text_search(
+                location=city,
+                query=keywords,
+                radius=8000)
+    except ValueError:
+        print("city not found")
     # has to be called in order for the details to be fetched
-    for p in query_results.places:
-        p.get_details()
+    if query_results:
+        for p in query_results.places:
+            p.get_details()
 
-    # sorted by number of reviews in descending order
-    global sorted_results
-    sorted_results = query_results.places
-    #sorted_results = sorted(query_results.places, key=my_key, reverse=True)
+        # sorted by number of reviews in descending order
+        global sorted_results
+        sorted_results = query_results.places
+        #sorted_results = sorted(query_results.places, key=my_key, reverse=True)
 
 
 def calculate_distance(guessed_location, actual_location):
@@ -64,7 +68,6 @@ def calculate_distance(guessed_location, actual_location):
     lon1 = radians(guessed_location.longitude)
     lat2 = radians(actual_location.latitude)
     lon2 = radians(actual_location.longitude)
-
     dlon = lon2 - lon1
     dlat = lat2 - lat1
 
