@@ -39,7 +39,6 @@
                 {% if places %}
                     <h3>{{ places }}</h3>
                     <input type="hidden" name="data" value="" />
-                    {{ result }}
                     <button type="submit" class="btn btn-primary"
                             id="submit" onclick="submitMarker()">Take Guess</button>
                     <button type="submit" class="btn btn-primary" id="next"
@@ -47,9 +46,12 @@
                 {% endif %}
                 <div><h5> </h5></div>
                 <div id="distance"></div>
+                <div id="percentile"></div>
             </div>
             <div id="map"></div>
+            
         </div>
+        
 
         <script>
             var map;
@@ -108,6 +110,7 @@
                         var goalLatLng = {lat: data['lat'], lng: data['lng']};
                         distance = (data['distance'] * 1000).toFixed(2) ;
                         document.getElementById("distance").innerHTML = '<h5>Distance: ' + distance + 'm</h5>';
+                        document.getElementById("percentile").innerHTML = '<h5>' + data['percentile'] + '</h5>';
                         goalMarker = new google.maps.Marker({
                             position: goalLatLng,
                             map: map
