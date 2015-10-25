@@ -144,6 +144,15 @@
                             map: map
                         });
                         goalMarker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
+
+                        var LatLngList = new Array (marker.getPosition(),
+                                goalMarker.getPosition());
+                        var bounds = new google.maps.LatLngBounds ();
+                        for (var i = 0, LtLgLen = LatLngList.length; i <
+                                LtLgLen; i++) {
+                            bounds.extend (LatLngList[i]);
+                        }
+                        map.fitBounds(bounds);
                     }
                 });
 
